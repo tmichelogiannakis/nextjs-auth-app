@@ -1,3 +1,5 @@
+import { GetServerSideProps } from 'next';
+import { getSession, Session } from 'next-auth/client';
 import { Container, Box, Heading } from '@chakra-ui/react';
 import Link from '../../components/ui/Link/Link';
 import LoginForm from '../../components/auth/LoginForm/LoginForm';
@@ -16,6 +18,21 @@ const LoginPage = (): JSX.Element => {
       </Box>
     </Container>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session: Session | null = await getSession({ req });
+  if (session) {
+    return {
+      redirect: {
+        destination: '/profile',
+        permanent: false
+      }
+    };
+  }
+  return {
+    props: {}
+  };
 };
 
 export default LoginPage;

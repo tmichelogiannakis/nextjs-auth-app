@@ -1,6 +1,12 @@
+import { GetServerSideProps } from 'next';
+import { getSession, Session } from 'next-auth/client';
 import { Container, Text } from '@chakra-ui/react';
 
-const ProfilePage = (): JSX.Element => {
+type ProfilePageProps = {
+  session: Session;
+};
+
+const ProfilePage = ({ session }: ProfilePageProps): JSX.Element => {
   return (
     <Container maxW="container.xl">
       <Text
@@ -12,8 +18,24 @@ const ProfilePage = (): JSX.Element => {
       >
         Your User Profile
       </Text>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
     </Container>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<ProfilePageProps> = async ({
+  req
+}) => {
+  const session: Session | null = await getSession({ req });
+  if (session) {
+    return { props: { session } };
+  }
+  return {
+    redirect: {
+      destination: '/auth/login',
+      permanent: false
+    }
+  };
 };
 
 export default ProfilePage;

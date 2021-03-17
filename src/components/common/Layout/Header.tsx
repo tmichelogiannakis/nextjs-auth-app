@@ -1,5 +1,6 @@
 import { FC, MouseEvent } from 'react';
 import { useSession, signOut } from 'next-auth/client';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -30,14 +31,17 @@ const NavLink: FC<LinkProps> = ({ children, ...otherProps }) => {
   );
 };
 
-const handleLogoutClick = (event: MouseEvent<HTMLButtonElement>) => {
-  event.preventDefault();
-  signOut();
-};
-
 const Header = (): JSX.Element => {
   const theme = useTheme();
-  const [session] = useSession();
+  const router = useRouter();
+  const [session, loading] = useSession();
+
+  const handleLogoutClick = async (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    await signOut({ redirect: false });
+    await router.prefetch('/auth/login');
+    router.push('/auth/login');
+  };
 
   return (
     <Box as="header" background="primary.900" boxShadow="md">
@@ -48,7 +52,7 @@ const Header = (): JSX.Element => {
           </Link>
           <Box as="nav">
             <List display="flex" alignItems="center">
-              {session ? (
+              {session && !loading && (
                 <>
                   <ListItem marginX="2">
                     <NavLink href="/profile">Profile</NavLink>
@@ -69,7 +73,8 @@ const Header = (): JSX.Element => {
                     </Button>
                   </ListItem>
                 </>
-              ) : (
+              )}
+              {!session && !loading && (
                 <ListItem marginX="2">
                   <NavLink href="/auth/login">Login</NavLink>
                 </ListItem>

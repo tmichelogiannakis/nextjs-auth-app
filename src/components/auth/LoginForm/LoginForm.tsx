@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/client';
 import {
   Box,
@@ -13,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import UserType, { userSchema } from '../../../types/user';
 
 const LoginForm = (): JSX.Element => {
+  const router = useRouter();
   const { register, handleSubmit, errors, reset } = useForm<UserType>({
     resolver: yupResolver(userSchema)
   });
@@ -25,14 +27,17 @@ const LoginForm = (): JSX.Element => {
       email,
       password
     });
-    reset();
     if (result.error) {
+      reset();
       toast({
         description: result.error,
         status: 'error',
         duration: 4000,
         isClosable: true
       });
+    } else {
+      await router.prefetch('/profile');
+      router.replace('/profile');
     }
   });
 
