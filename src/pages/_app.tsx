@@ -1,12 +1,13 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
+import { Provider as SessionProvider } from 'next-auth/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import theme from '../theme';
 import Layout from '../components/common/Layout/Layout';
 
 const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
-    <ChakraProvider resetCSS theme={theme}>
+    <SessionProvider session={pageProps.session}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
@@ -17,11 +18,13 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
         />
         <title>Nextjs Auth App</title>
       </Head>
-      <ColorModeScript />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </ChakraProvider>
+      <ChakraProvider resetCSS theme={theme}>
+        <ColorModeScript />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ChakraProvider>
+    </SessionProvider>
   );
 };
 
