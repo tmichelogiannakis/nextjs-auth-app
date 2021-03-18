@@ -2,7 +2,7 @@ import { compare } from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { findUser, updateUserPassword } from '../../../data/users';
 import authenticated from '../../../middlewares/authendicate';
-import { validate } from '../../../middlewares/validate';
+import validate from '../../../middlewares/validate';
 import { changePasswordSchema } from '../../../types/change-password';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

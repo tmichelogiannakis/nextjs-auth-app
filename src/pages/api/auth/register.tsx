@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { saveUser, emailExists } from '../../../data/users';
-import { validate } from '../../../middlewares/validate';
+import validate from '../../../middlewares/validate';
 import { userSchema } from '../../../types/user';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
