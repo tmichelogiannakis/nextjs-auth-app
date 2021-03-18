@@ -3,6 +3,11 @@ import db from '.';
 import UserType from '../types/user';
 import { hash } from 'bcrypt';
 
+const hashPassword = async (password: string): Promise<string> => {
+  const hashedPassword = await hash(password, 10);
+  return hashedPassword;
+};
+
 export const findUser = (email: string): UserType => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -19,7 +24,7 @@ export const saveUser = async (user: UserType): Promise<Partial<UserType>> => {
   const { email } = user;
 
   const id = uuid();
-  const password = await hash(user.password, 16);
+  const password = await hashPassword(user.password);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -34,9 +39,9 @@ export const saveUser = async (user: UserType): Promise<Partial<UserType>> => {
 export const updateUserPassword = async (
   email: string,
   newPassword: string
-) => {
-  const password = await hash(newPassword, 16);
+): Promise<void> => {
+  const password = await hashPassword(newPassword);
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const user = db.get('users').find({ email }).assign({ password }).write();
+  db.get('users').find({ email }).assign({ password }).write();
 };
