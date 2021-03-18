@@ -30,3 +30,13 @@ export const saveUser = async (user: UserType): Promise<Partial<UserType>> => {
     email
   };
 };
+
+export const updateUserPassword = async (
+  email: string,
+  newPassword: string
+) => {
+  const password = await hash(newPassword, 16);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const user = db.get('users').find({ email }).assign({ password }).write();
+};

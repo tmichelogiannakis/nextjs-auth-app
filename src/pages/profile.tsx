@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { getSession, Session } from 'next-auth/client';
 import { Container, Text } from '@chakra-ui/react';
+import ChangePasswordForm from '../components/auth/ChangePasswordForm/ChangePasswordForm';
 
 type ProfilePageProps = {
   session: Session;
@@ -18,6 +19,9 @@ const ProfilePage = ({ session }: ProfilePageProps): JSX.Element => {
       >
         Your User Profile
       </Text>
+      <Container maxW="md" p="0">
+        <ChangePasswordForm />
+      </Container>
       <pre>{JSON.stringify(session, null, 2)}</pre>
     </Container>
   );

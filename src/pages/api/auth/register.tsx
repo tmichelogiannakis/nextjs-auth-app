@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     case 'POST': {
       if (emailExists(req.body.email)) {
         res.status(422).json({ message: 'User exists already!' });
-        return;
+        break;
       }
       try {
         const newUser = await saveUser(req.body);
@@ -19,6 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
     }
     default: {
+      res.status(405).json({ message: 'Method not allowed' });
       break;
     }
   }
