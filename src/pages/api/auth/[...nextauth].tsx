@@ -9,64 +9,19 @@ export default NextAuth({
   },
   providers: [
     Providers.Credentials({
-      name: 'Credentials',
-      credentials: {
-        email: {},
-        password: {}
-      },
+      name: '',
+      credentials: {},
       async authorize(credentials) {
         const { email, password } = credentials;
         const user = findUser(email);
-        if (!user) {
-          throw new Error('Wrong credentials!');
+        if (user) {
+          const isPasswordValid = await compare(password, user.password);
+          if (isPasswordValid) {
+            return { email };
+          }
         }
-
-        const isPasswordValid = await compare(password, user.password);
-        if (!isPasswordValid) {
-          throw new Error('Wrong credentials!');
-        }
-
-        return { email, name: user.id };
+        throw new Error('Wrong credentials!');
       }
     })
   ]
 });
-
-/*
-
-authorize: async (credentials: Record<string, string>) => {
-        
-
-        const { email, password } = credentials;
-        const user = findUser(email);
-        if (!user) {
-          // throw new Error('Wrong credentials!');
-          return null;
-        }
-
-        const isPasswordValid = await compare(password, user.password);
-        if (!isPasswordValid) {
-          // throw new Error('Wrong credentials!');
-          return null;
-        }
-
-        return { name: email }; 
-        // return { email } as GenericReturnConfig;
-      }
-
-
-
-        const user = findUser(email);
-        if (!user) {
-          // throw new Error('Wrong credentials!');
-          return null;
-        }
-
-        const isPasswordValid = await compare(password, user.password);
-        if (!isPasswordValid) {
-          // throw new Error('Wrong credentials!');
-          return null;
-        }
-        
-        return null;
-        // return { email }; */

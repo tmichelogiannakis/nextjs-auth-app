@@ -1,18 +1,23 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
+import { NextHandler } from 'next-connect';
 import { getSession } from 'next-auth/client';
+import { ExtendedNextApiRequest } from '../next-connect';
 
-const authenticated = (handler: NextApiHandler) => async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
+/*
+ * Next connect middleware that checks whether the request is authenticated
+ * and adds the session object inside request
+ */
+export const authenticated = async (
+  req: ExtendedNextApiRequest,
+  res: NextApiResponse,
+  next: NextHandler
+): Promise<void> => {
   const session = await getSession({ req });
-
   if (session) {
-    req.body.session = session;
-    return await handler(req, res);
+    req.session = session;
+    next();
   }
-
-  res.status(401).json({ message: 'Not authendicated' });
+  res.status(401).json({ message: 'Unauthorized' });
 };
 
 export default authenticated;

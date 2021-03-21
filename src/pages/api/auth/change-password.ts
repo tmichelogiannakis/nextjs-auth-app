@@ -1,47 +1,35 @@
+import { NextApiResponse } from 'next';
 import { compare } from 'bcrypt';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { findUser, updateUserPassword } from '../../../data/users';
+import nextConnect, { ExtendedNextApiRequest } from '../../../next-connect';
 import authenticated from '../../../middlewares/authendicate';
 import validate from '../../../middlewares/validate';
+import { findUser, updateUserPassword } from '../../../data/users';
 import { changePasswordSchema } from '../../../types/change-password';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  switch (req.method) {
-    case 'PATCH': {
-      const {
-        session: {
-          user: { email }
-        },
-        newPassword,
-        oldPassword
-      } = req.body;
-
+const handler = nextConnect()
+  .use(validate(changePasswordSchema))
+  .use(authenticated)
+  .patch(async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
+    const email = req.session?.user?.email;
+    if (email) {
       const user = findUser(email);
       if (user) {
+        const { newPassword, oldPassword } = req.body;
         const isPasswordValid = await compare(oldPassword, user.password);
         if (isPasswordValid) {
-          try {
-            await updateUserPassword(email, newPassword);
-            res.status(204).json({ message: 'Password updated successfully' });
-            break;
-          } catch {
-            res.status(500).json({ message: 'Something wend wrong' });
-          }
-          break;
+          await updateUserPassword(email, newPassword);
+          res.status(204).json({ message: 'Password updated successfully' });
+        } else {
+          res.status(422).json({ message: 'Wrong old password!' });
         }
-
-        res.status(422).json({ message: 'Wrong old password!' });
-        break;
+      } else {
+        res.status(404).json({ message: 'User not found' });
       }
-
-      res.status(404).json({ message: 'User not found' });
-      break;
+    } else {
+      throw new Error(
+        'session or session.user or session.user.email is not present in request'
+      );
     }
-    default: {
-      res.status(405).json({ message: 'Method not allowed' });
-      break;
-    }
-  }
-};
+  });
 
-export default authenticated(validate(changePasswordSchema, handler));
+export default handler;

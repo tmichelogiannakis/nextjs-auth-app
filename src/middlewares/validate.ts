@@ -1,21 +1,34 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { NextHandler } from 'next-connect';
+import { ValidationError } from 'yup';
 import { ObjectShape, OptionalObjectSchema } from 'yup/lib/object';
 
-const validate = (
-  schema: OptionalObjectSchema<ObjectShape>,
-  handler: NextApiHandler
-) => async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'POST' || req.method === 'PUT') {
-    try {
-      req.body = await schema.validate(req.body, {
-        abortEarly: false,
-        strict: true
+/*
+ * Next connect middleware to validate the request body against the given yup schema
+ */
+export const validate = (schema: OptionalObjectSchema<ObjectShape>) => async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+  next: NextHandler
+): Promise<void> => {
+  try {
+    await schema.validate(req.body, {
+      abortEarly: false,
+      strict: true,
+      stripUnknown: true
+    });
+    next();
+  } catch (error) {
+    // if error is a yup validation eror return 422 else throw the error
+    if (error instanceof ValidationError) {
+      res.status(422).json({
+        message: 'Unprocessable Entity',
+        errors: error.errors
       });
-    } catch (error) {
-      return res.status(422).json(error);
+    } else {
+      throw error;
     }
   }
-  return await handler(req, res);
 };
 
 export default validate;
