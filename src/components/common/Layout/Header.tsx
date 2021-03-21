@@ -1,4 +1,4 @@
-import { FC, MouseEvent } from 'react';
+import { FC, MouseEvent, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/client';
 import { useRouter } from 'next/router';
 import {
@@ -39,9 +39,13 @@ const Header = (): JSX.Element => {
   const handleLogoutClick = async (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     await signOut({ redirect: false });
-    await router.prefetch('/auth/login');
     router.push('/auth/login');
   };
+
+  // Prefetch the login page
+  useEffect(() => {
+    router.prefetch('/auth/login');
+  }, []);
 
   return (
     <Box as="header" background="primary.900" boxShadow="md">

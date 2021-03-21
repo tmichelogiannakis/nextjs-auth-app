@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import nc, { NextConnect } from 'next-connect';
-import { Session } from 'next-auth/client';
+import { Session } from 'next-auth';
 import UserType from './types/user';
 
 export interface ExtendedNextApiRequest extends NextApiRequest {

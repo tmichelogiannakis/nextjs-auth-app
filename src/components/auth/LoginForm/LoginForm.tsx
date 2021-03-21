@@ -12,6 +12,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import UserType, { userSchema } from '../../../types/user';
+import { useEffect } from 'react';
 
 const LoginForm = (): JSX.Element => {
   const router = useRouter();
@@ -36,10 +37,14 @@ const LoginForm = (): JSX.Element => {
         isClosable: true
       });
     } else {
-      await router.prefetch('/profile');
       router.replace('/profile');
     }
   });
+
+  // Prefetch the profile page
+  useEffect(() => {
+    router.prefetch('/profile');
+  }, []);
 
   return (
     <Box as="form" onSubmit={onSubmit}>

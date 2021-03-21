@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
-import { getSession, Session } from 'next-auth/client';
+import { Session } from 'next-auth';
+import { getSession } from 'next-auth/client';
 import { Container, Text } from '@chakra-ui/react';
 import ChangePasswordForm from '../components/auth/ChangePasswordForm/ChangePasswordForm';
 
