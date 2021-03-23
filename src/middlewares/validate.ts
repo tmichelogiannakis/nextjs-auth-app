@@ -6,7 +6,7 @@ import { ObjectShape, OptionalObjectSchema } from 'yup/lib/object';
 /*
  * Next connect middleware to validate the request body against the given yup schema
  */
-export const validate = (schema: OptionalObjectSchema<ObjectShape>) => async (
+const validate = (schema: OptionalObjectSchema<ObjectShape>) => async (
   req: NextApiRequest,
   res: NextApiResponse,
   next: NextHandler
