@@ -1,8 +1,9 @@
+import { NextPage } from 'next';
 import { Container, Box, Heading } from '@chakra-ui/react';
 import Link from '../../components/ui/Link/Link';
 import RegisterForm from '../../components/auth/RegisterForm/RegisterForm';
 
-const RegisterPage = (): JSX.Element => {
+const RegisterPage: NextPage = () => {
   return (
     <Container maxW="md">
       <Box boxShadow="md" padding="4" marginTop="12" borderRadius="md">

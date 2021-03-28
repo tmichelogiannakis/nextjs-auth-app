@@ -1,11 +1,11 @@
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { Session } from 'next-auth';
 import { getSession } from 'next-auth/client';
 import { Container, Box, Heading } from '@chakra-ui/react';
 import Link from '../../components/ui/Link/Link';
 import LoginForm from '../../components/auth/LoginForm/LoginForm';
 
-const LoginPage = (): JSX.Element => {
+const LoginPage: NextPage = () => {
   return (
     <Container maxW="md">
       <Box boxShadow="md" padding="4" marginTop="12" borderRadius="md">

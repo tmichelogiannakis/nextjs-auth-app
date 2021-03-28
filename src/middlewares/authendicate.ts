@@ -16,8 +16,9 @@ export const authenticated = async (
   if (session) {
     req.session = session;
     next();
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
   }
-  res.status(401).json({ message: 'Unauthorized' });
 };
 
 export default authenticated;

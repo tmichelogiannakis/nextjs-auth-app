@@ -1,4 +1,4 @@
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { Session } from 'next-auth';
 import { getSession } from 'next-auth/client';
 import { Container, Text } from '@chakra-ui/react';
@@ -8,7 +8,7 @@ type ProfilePageProps = {
   session: Session;
 };
 
-const ProfilePage = ({ session }: ProfilePageProps): JSX.Element => {
+const ProfilePage: NextPage<ProfilePageProps> = ({ session }): JSX.Element => {
   return (
     <Container maxW="container.xl">
       <Text

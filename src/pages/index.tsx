@@ -1,6 +1,7 @@
+import { NextPage } from 'next';
 import { Container, Text } from '@chakra-ui/react';
 
-const Home = (): JSX.Element => {
+const Home: NextPage = () => {
   return (
     <Container maxW="container.xl">
       <Text
