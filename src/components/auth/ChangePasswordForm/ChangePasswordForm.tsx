@@ -14,11 +14,14 @@ import ChangePasswordType, {
 } from '../../../types/change-password';
 
 const ChangePasswordForm = (): JSX.Element => {
-  const { register, handleSubmit, errors, reset } = useForm<ChangePasswordType>(
-    {
-      resolver: yupResolver(changePasswordSchema)
-    }
-  );
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<ChangePasswordType>({
+    resolver: yupResolver(changePasswordSchema)
+  });
 
   const toast = useToast();
 
@@ -65,12 +68,7 @@ const ChangePasswordForm = (): JSX.Element => {
         <FormLabel htmlFor="new-password" marginBottom="1">
           New password
         </FormLabel>
-        <Input
-          type="password"
-          id="new-password"
-          name="newPassword"
-          ref={register}
-        />
+        <Input type="password" id="new-password" {...register('newPassword')} />
         {errors.newPassword && (
           <Text color="red.500" textAlign="left" marginTop="1" fontSize="sm">
             {errors.newPassword.message}
@@ -81,12 +79,7 @@ const ChangePasswordForm = (): JSX.Element => {
         <FormLabel htmlFor="old-password" marginBottom="1">
           Old password
         </FormLabel>
-        <Input
-          type="password"
-          id="old-password"
-          name="oldPassword"
-          ref={register}
-        />
+        <Input type="password" id="old-password" {...register('oldPassword')} />
         {errors.oldPassword && (
           <Text color="red.500" textAlign="left" marginTop="1" fontSize="sm">
             {errors.oldPassword.message}

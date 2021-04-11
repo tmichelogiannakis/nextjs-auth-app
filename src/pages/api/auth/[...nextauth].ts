@@ -9,7 +9,7 @@ export default NextAuth({
   },
   providers: [
     Providers.Credentials({
-      name: '',
+      name: 'Credentials',
       credentials: {},
       async authorize(credentials) {
         const { email, password } = credentials;

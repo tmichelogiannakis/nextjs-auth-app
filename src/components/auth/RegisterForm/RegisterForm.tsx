@@ -12,7 +12,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import UserType, { userSchema } from '../../../types/user';
 
 const RegisterForm = (): JSX.Element => {
-  const { register, handleSubmit, errors, reset } = useForm<UserType>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<UserType>({
     resolver: yupResolver(userSchema)
   });
 
@@ -64,7 +69,7 @@ const RegisterForm = (): JSX.Element => {
         <FormLabel htmlFor="email" marginBottom="1">
           Your Email
         </FormLabel>
-        <Input type="email" id="email" name="email" ref={register} />
+        <Input type="email" id="email" {...register('email')} />
         {errors.email && (
           <Text color="red.500" textAlign="left" marginTop="1" fontSize="sm">
             {errors.email.message}
@@ -75,7 +80,7 @@ const RegisterForm = (): JSX.Element => {
         <FormLabel htmlFor="password" marginBottom="1">
           Your password
         </FormLabel>
-        <Input type="password" id="password" name="password" ref={register} />
+        <Input type="password" id="password" {...register('password')} />
         {errors.password && (
           <Text color="red.500" textAlign="left" marginTop="1" fontSize="sm">
             {errors.password.message}
